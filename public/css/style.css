@@ -1,0 +1,15 @@
+
+#container { min-height: 100vh; }
+
+.inner { margin: 0 auto; max-width: 1440px; position: relative; width: 100%; }
+
+.list { display: flex; gap: 20px; padding: 50px; }
+.list .column { border: 1px solid #171717; padding: 15px; width: fit-content }
+.list .column ol { display: flex; flex-direction: column; gap: 10px; }
+.card { /*background-color: var(--grayish-black);*/ border: 1px solid #171717; cursor: pointer; display: block; }
+.card.dragging .in-drag { opacity: 0; }
+.card.asd { background-color: red }
+
+[draggable="true"] {
+  cursor: pointer;
+}

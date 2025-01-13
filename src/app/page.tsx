@@ -1,101 +1,196 @@
+"use client";
+
 import Image from "next/image";
+import React, {useEffect} from "react";
+import {debounce} from "next/dist/server/utils";
+
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    const dragStartRef = React.useRef(null);
+    const listRef = React.useRef<HTMLDivElement>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    useEffect(() => {
+        // if(listRef.current){
+        //     const $list = listRef.current;
+        //     const $columns = $list.querySelectorAll('.column');
+        //
+        //     document.addEventListener("mousedown",(event)=>{
+        //         const $target = event.target as HTMLElement;
+        //
+        //         if (listRef.current && listRef.current.contains($target)) {
+        //             if ($target.classList.contains("card")) {
+        //                 dragStartRef.current = {
+        //                     element: $target,
+        //                     column: $target.closest('.column'),
+        //                     x: event.clientX,
+        //                     y: event.clientY
+        //                 }
+        //                 mouseDownRef.current = true;
+        //                 console.log(listRef.current.contains($target),'다운')
+        //
+        //             } else {
+        //                 return;
+        //             }
+        //         }
+        //     })
+        //
+        //     document.addEventListener("mousemove",debounce((event: MouseEvent) => {
+        //         if(mouseDownRef.current){
+        //             const $target = dragStartRef.current.element;
+        //             const $column = $target.closest('.column');
+        //             // console.log($column === dragStartRef.current.column,'같나?',event);
+        //
+        //             $target.classList.add("dragging");
+        //             $target.classList.add("asd");
+        //             $target.style.transform = `translate(${event.clientX - dragStartRef.current.x}px, ${event.clientY - dragStartRef.current.y}px)`;
+        //         }
+        //     }, 20));
+        //
+        //     document.addEventListener("dragenter",debounce((event: MouseEvent) => {
+        //         console.log(event);
+        //     }, 20));
+        //
+        //     function cardDragEnd(event){
+        //         if(mouseDownRef.current){
+        //             const $target = dragStartRef.current.element;
+        //             mouseDownRef.current = false;
+        //
+        //             $target.classList.remove("dragging");
+        //             $target.style.transform = ``;
+        //         }
+        //     }
+        //
+        //     document.addEventListener("mouseup",cardDragEnd)
+        //
+        //     document.addEventListener("dragend",cardDragEnd)
+        //
+        // }
+
+    }, []);
+
+    function dragStart(event){
+        const $target = event.target as HTMLElement;
+        const $dragClone = $target.cloneNode(true);
+        const rect = $target.getBoundingClientRect();
+
+        const dragX = event.clientX - rect.left;
+        const dragY = event.clientY - rect.top;
+        console.log(event)
+
+        $dragClone.style.position = "absolute";
+        $dragClone.style.top = "-9999px"; // 화면 밖으로 이동
+        $dragClone.style.pointerEvents = "none";
+        $dragClone.style.width = `${$target.offsetWidth}px`;
+        $dragClone.style.height = `${$target.offsetHeight}px`;
+
+        document.body.appendChild($dragClone);
+        if (event.dataTransfer) {
+            event.dataTransfer.setDragImage($dragClone, dragX, dragY);
+        } else {
+            console.error("dataTransfer is not supported during dragStart.");
+        }
+
+        console.log($dragClone)
+
+        $target.classList.add("dragging");
+        dragStartRef.current = {
+            element: $target,
+            column: $target.closest('.column'),
+            x: event.clientX,
+            y: event.clientY
+        }
+    }
+
+    function dragMove(event){
+        event.preventDefault();
+        // console.log(event);
+    }
+    function dragEnd(event){
+        event.preventDefault();
+
+        const $target = event.target as HTMLElement;
+        $target.classList.remove("dragging");
+    }
+
+    const dragTest = debounce((event: MouseEvent) => {
+        if(dragStartRef.current.element){
+            const $target = event.target as HTMLElement;
+            const clientY = event.clientY;
+            const childCards = $target.closest('.column').querySelectorAll('.card');
+
+            console.log(childCards)
+            let closestChild = null;
+            let closestDistance = Infinity;
+
+            childCards.forEach((card) => {
+                const rect = card.getBoundingClientRect();
+                const childCenter = rect.top + rect.height / 2;
+                const distance = Math.abs(clientY - childCenter);
+
+                // console.log(childCenter,clientY,distance,closestChild)
+
+                if(distance < closestDistance){
+                    closestDistance = distance;
+                    closestChild = card;
+                }
+            })
+
+
+            if((closestChild.offsetHeight / 2) > closestDistance){
+                closestChild.before(dragStartRef.current.element);
+            }else{
+                closestChild.after(dragStartRef.current.element);
+            }
+        }
+    },20)
+
+    document.addEventListener("mouseup",debounce((event: MouseEvent) => {
+        const $target = dragStartRef.current.element;
+
+        $target.classList.remove("dragging");
+    }, 20));
+
+    function listCard(_,index) {
+        return <li key={index} className="card"
+                   draggable="true"
+                   onDragStart={(event) => dragStart(event)}
+                   onDrag={(event) => dragMove(event)}
+                    onDragEnd={(event) => dragEnd(event)}
+            >
+            <div className="in-drag">
+                <div className="">
+                    <img src="/images/temp_img01.png" alt="logo" draggable="false" />
+                </div>
+                <div className="">
+                    <strong>1234 ${index}</strong>
+                </div>
+            </div>
+        </li>;
+        // return <li key={index} className="card" onDragStart={dragStart} onDrag={dragMove} onDragEnd={dragEnd}></li>;
+    }
+
+    document.addEventListener("mouseup", (event) => {
+
+    })
+
+    return (
+        <div className="list" ref={listRef}>
+            <div className="column" onDragOver={dragTest}>
+                <ol data-list-id="1" >
+                    {new Array(3).fill(0).map(listCard)}
+                </ol>
+            </div>
+            <div className="column" onDragOver={dragTest}>
+                <ol data-list-id="1">
+                    {new Array(2).fill(0).map(listCard)}
+                </ol>
+            </div>
+            <div className="column" onDragOver={dragTest}>
+                <ol data-list-id="1">
+                    {new Array(1).fill(0).map(listCard)}
+                </ol>
+            </div>
+
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    );
 }

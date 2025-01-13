@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --grayish-black: #22272B;
+}
+
+/*@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}*/
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: "Pretendard", sans-serif;
+  font-size:16px;
+}
+
+body,html {
+  margin: 0;
+  padding: 0;
+}
+
+strong,p,span,h1,h2,h3,h4,h5,h6 { color: inherit; font-family: inherit; font-size:inherit; font-weight: inherit;}
+
+
+@font-face { font-family: 'Pretendard'; font-style: normal; font-weight: 400; src: url('/assets/fonts/Pretendard-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'Pretendard'; font-style: normal; font-weight: 500; src: url('/assets/fonts/Pretendard-Medium.woff2') format('woff2'); }
+@font-face { font-family: 'Pretendard'; font-style: normal; font-weight: 600; src: url('/assets/fonts/Pretendard-SemiBold.woff2') format('woff2'); }
+@font-face { font-family: 'Pretendard'; font-style: normal; font-weight: 700; src: url('/assets/fonts/Pretendard-Bold.woff2') format('woff2'); }
+
