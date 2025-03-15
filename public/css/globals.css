@@ -20,6 +20,7 @@
 * {
   margin: 0;
   padding: 0;
+  transition: color 0.055s, background-color 0.4s;
 }
 
 body {

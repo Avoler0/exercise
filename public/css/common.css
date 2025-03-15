@@ -4,4 +4,11 @@
 
 
 
-
+:root {
+    --color-black: #1E1E1E;
+    --color-white: #fff;
+    --color-red: #E63946;
+    --color-green: #2A9D8F;
+    --color-blue: #457B9D;
+    --color-yellow: #F4A261;
+}

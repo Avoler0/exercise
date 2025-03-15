@@ -1,10 +1,22 @@
+type ToastType = 'success' | 'info' | 'warning' | 'default';
+type ToastPosition = 'top' | 'bottom' | 'left' | 'right';
+
+export type ToastInstance = {
+    id: string | number,
+    message: string,
+    type?: ToastType,
+    position?: ToastPosition
+}
+
+type ToastNoneIdInstance = Omit<ToastInstance, 'id'>;
+
 
 class Toast {
-    static instance = null;
+    static instance:ToastInstance[] | null = null;
     listeners = new Set();
-    toasts = [];
-    duration = 0;
-    delay = 0;
+    toasts:ToastInstance[] = [];
+    static duration:number = 1000;
+    static delay:number = 0;
 
 
     static getInstance() {
@@ -14,14 +26,12 @@ class Toast {
         return this.instance;
     }
 
-    init({duration = 3000,delay = 0}){
-        console.log("Toast init :" ,duration,delay)
-
-        this.duration = duration;
-        this.delay = delay;
+    init({duration,delay}){
+        this.duration = duration | this.duration;
+        this.delay = delay | this.delay;
     }
 
-    add(input){
+    add(input:ToastNoneIdInstance | string){
         const toastData = typeof input === 'string' ? {message: input} : input;
         const id = Date.now();
         this.toasts.push({
@@ -32,7 +42,17 @@ class Toast {
         });
         this.notifyListeners();
 
-        setTimeout(() => {this.remove(id)},5000)
+        console.log(id)
+        setTimeout(() => {
+            const toastElement = document.querySelector(`.toast-item[data-toast-id="${id}"]`);
+
+            if(toastElement){
+                toastElement.classList.remove('init')
+            }
+            setTimeout(()=>{
+                this.remove(id)
+            },300)
+        },6000)
     }
 
     remove(id){

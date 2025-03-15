@@ -2,6 +2,7 @@
 
 import React from "react"
 import Link from "next/link";
+import Toast from "src/utils/toast";
 
 export default function Header() {
     const refNavSub = React.useRef(null);
@@ -77,6 +78,16 @@ export default function Header() {
         $body.classList.toggle('dark');
     }
 
+    function disabledNavMenu(evt,subUrl:string){
+        if(subUrl == "#"){
+            evt.preventDefault();
+            Toast?.add({
+                type: 'warning',
+                message:'현재 이용 불가한 메뉴입니다.'
+            })
+        }
+    }
+
     return (
         <React.Fragment>
             <header id="header" ref={refHeader} className={navSubState ? "open-menu" : ""}>
@@ -94,6 +105,7 @@ export default function Header() {
                         </ul>
                     </nav>
                     <div className="header-utils">
+                        <button className="account" type="button"></button>
                         <button className="mode" type="button" onClick={darkMode}></button>
                     </div>
                 </div>
@@ -104,7 +116,7 @@ export default function Header() {
                         <ul key={menu.name} data-menu-name={menu.name}>
                             {menu.sub.map((sub,index) => (
                                 <li key={menu.name + index}>
-                                    <Link href={sub.url}>{sub.name}</Link>
+                                    <Link href={sub.url} onClick={(evt) => disabledNavMenu(evt,sub.url)}>{sub.name}</Link>
                                 </li>
                             ))}
                         </ul>
