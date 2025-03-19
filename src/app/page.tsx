@@ -2,11 +2,13 @@
 
 import React from "react";
 import Toast from "src/utils/toast";
-
+import Modal from "src/utils/modal";
+import ModalLogin from "src/component/modal/Modal-Login.Cmp";
 
 export default function Home() {
     function toastTest(){
-        Toast?.add("hi");
+
+        Modal?.add(<ModalLogin />);
     }
     return (
         <div>

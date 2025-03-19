@@ -1,4 +1,11 @@
 :root {
+  --color-black: #1E1E1E;
+  --color-white: #fff;
+  --color-red: #E63946;
+  --color-green: #2A9D8F;
+  --color-blue: #457B9D;
+  --color-yellow: #F4A261;
+
   --background: #ffffff;
   --foreground: #171717;
   --default-fs-color: #171717;
@@ -6,18 +13,18 @@
   --header-height:80px;
   --header-transition: 0.5s;
 
+  --modal-md-width: 500px;
+
+  --color-border-gray: #C9C9C9;
 }
 
-
-
-/*@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}*/
+body.dark {
+  --background: #05141F;
+  --default-fs-color: #FFF;
+}
 
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
   transition: color 0.055s, background-color 0.4s;
@@ -31,10 +38,7 @@ body {
   font-weight: 400;
 }
 
-body.dark {
-  --background: #05141F;
-  --default-fs-color: #FFF;
-}
+
 
 body,html {
   margin: 0;

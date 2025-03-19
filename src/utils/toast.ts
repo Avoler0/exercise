@@ -1,3 +1,5 @@
+import React from "react";
+
 type ToastType = 'success' | 'info' | 'warning' | 'default';
 type ToastPosition = 'top' | 'bottom' | 'left' | 'right';
 
@@ -42,7 +44,6 @@ class Toast {
         });
         this.notifyListeners();
 
-        console.log(id)
         setTimeout(() => {
             const toastElement = document.querySelector(`.toast-item[data-toast-id="${id}"]`);
 
@@ -64,7 +65,7 @@ class Toast {
         this.listeners.forEach(listener => listener([...this.toasts]));
     }
 
-    subscribe(listener){
+    subscribe(listener:React.Dispatch<React.SetStateAction<ToastInstance[]>>){
         this.listeners.add(listener);
     }
 
