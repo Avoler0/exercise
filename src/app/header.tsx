@@ -3,6 +3,8 @@
 import React from "react"
 import Link from "next/link";
 import Toast from "src/utils/toast";
+import Modal from "src/utils/modal";
+import ModalLogin from "src/component/modal/Modal-Login.Cmp";
 
 export default function Header() {
     const refNavSub = React.useRef(null);
@@ -88,6 +90,10 @@ export default function Header() {
         }
     }
 
+    function evtOpenLogin(){
+        Modal?.add(<ModalLogin />);
+    }
+
     return (
         <React.Fragment>
             <header id="header" ref={refHeader} className={navSubState ? "open-menu" : ""}>
@@ -105,7 +111,7 @@ export default function Header() {
                         </ul>
                     </nav>
                     <div className="header-utils">
-                        <button className="account" type="button"></button>
+                        <button className="account" type="button" onClick={evtOpenLogin}></button>
                         <button className="mode" type="button" onClick={darkMode}></button>
                     </div>
                 </div>

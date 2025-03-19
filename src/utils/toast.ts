@@ -15,10 +15,11 @@ type ToastNoneIdInstance = Omit<ToastInstance, 'id'>;
 
 class Toast {
     static instance:ToastInstance[] | null = null;
-    listeners = new Set();
-    toasts:ToastInstance[] = [];
-    static duration:number = 1000;
-    static delay:number = 0;
+    private listeners = new Set();
+    private toasts:ToastInstance[] = [];
+    private duration:number = 1000;
+    private delay:number = 0;
+    private lastMessage:string = '';
 
 
     static getInstance() {
@@ -36,12 +37,16 @@ class Toast {
     add(input:ToastNoneIdInstance | string){
         const toastData = typeof input === 'string' ? {message: input} : input;
         const id = Date.now();
+
+        if(this.lastMessage === toastData.message) return;
+
         this.toasts.push({
             id,
             message: toastData.message,
             type: toastData.type || 'default',
             position: toastData.position || 'top',
         });
+
         this.notifyListeners();
 
         setTimeout(() => {
@@ -52,8 +57,11 @@ class Toast {
             }
             setTimeout(()=>{
                 this.remove(id)
+                this.lastMessage = '';
             },300)
-        },6000)
+        },3000)
+
+        this.lastMessage = toastData.message;
     }
 
     remove(id){

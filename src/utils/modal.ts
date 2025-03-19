@@ -14,15 +14,14 @@ class Modal {
     }
 
     add(jsx?:React.ReactNode){
-
         this.modalJSX = jsx;
-        console.log('모달 추가',this.modalJSX);
+        document.body.classList.add('lock');
         this.notifyListeners();
     }
 
     remove(){
         this.modalJSX = null;
-
+        document.body.classList.remove('lock');
         this.notifyListeners();
     }
 

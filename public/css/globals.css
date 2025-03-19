@@ -3,8 +3,9 @@
   --color-white: #fff;
   --color-red: #E63946;
   --color-green: #2A9D8F;
-  --color-blue: #457B9D;
+  --color-blue: #283cea;
   --color-yellow: #F4A261;
+  --color-gray: #888888;
 
   --background: #ffffff;
   --foreground: #171717;
@@ -18,13 +19,45 @@
   --color-border-gray: #C9C9C9;
 }
 
+
 body.dark {
   --background: #05141F;
   --default-fs-color: #FFF;
 }
 
+body.lock {
+  box-sizing: content-box;
+  overflow: hidden;
+  padding-right: 5px;
+}
+
+body.lock::after {
+  background-color: rgba(30,30,30,0.1);
+  content: "";
+  height: 100%;
+  position: absolute;
+  right: 0;
+  top:0;
+  width:5px;
+  z-index: 1001;
+}
+
+body::-webkit-scrollbar {
+  height: 5px;
+  width: 5px;
+}
+
+body::-webkit-scrollbar-track {
+  background-color: rgba(30,30,30,0.1);
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: rgba(30,30,30,0.2);
+}
+
 * {
   box-sizing: border-box;
+  line-height: 1.2;
   margin: 0;
   padding: 0;
   transition: color 0.055s, background-color 0.4s;
