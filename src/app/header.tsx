@@ -5,6 +5,7 @@ import Link from "next/link";
 import Toast from "src/utils/toast";
 import Modal from "src/utils/modal";
 import ModalLogin from "src/component/modal/Modal-Login.Cmp";
+import ModalSelectAccount from "src/component/modal/Modal-Select-Account.Cmp";
 
 export default function Header() {
     const refNavSub = React.useRef(null);
@@ -91,7 +92,7 @@ export default function Header() {
     }
 
     function evtOpenLogin(){
-        Modal?.add(<ModalLogin />);
+        Modal?.add(<ModalSelectAccount />);
     }
 
     return (

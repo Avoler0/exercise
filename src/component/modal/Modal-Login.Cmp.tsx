@@ -2,14 +2,17 @@ import React from "react";
 import Toast from "src/utils/toast";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
+import {getAccountByLogin} from "src/query/accout";
+import {supabaseClient} from "src/utils/supabase/supabase-client";
 
 type ModalLoginProps = {
-    setModalType: React.Dispatch<React.SetStateAction<String>>
+    setModalType?: React.Dispatch<React.SetStateAction<string>>
 }
 
 type LoginFormInputs = {
-    id: string;
+    email: string;
     password: string;
+    memory: boolean;
 }
 
 const registerSchema = z.object({
@@ -31,12 +34,26 @@ export default function ModalLogin({setModalType}:ModalLoginProps) {
         setModalType('login-modal');
     },[setModalType])
 
-    function evtSubmitLogin(data:LoginFormInputs){
-        console.log('데이터');
-        Toast?.add({
-            type: "success",
-            message: "로그인 기능은 아직 준비중입니다."
-        })
+    async function evtSubmitLogin(input:LoginFormInputs){
+        let message = '';
+        const email = input.email;
+        const password = input.password;
+        const memory = input.memory;
+
+        const login = await getAccountByLogin(email,password,memory);
+        console.log('데이터?',login);
+
+        if(login){
+            Toast?.add({
+                type: "success",
+                message: "로그인 되었습니다."
+            })
+        }else{
+            Toast?.add({
+                type: "warning",
+                message: "아이디 또는 비밀번호가 다릅니다.\n 다시 한번 시도해주세요."
+            })
+        }
 
 
     }
@@ -57,8 +74,8 @@ export default function ModalLogin({setModalType}:ModalLoginProps) {
                 <div className="login-form">
                     <form onSubmit={handleSubmit(evtSubmitLogin,evtSubmitError)} className="form-field">
                         <input
-                            {...register("id", {required: "아이디를 입력해주세요."})}
-                            type="text" id="Login-ID"
+                            {...register("email", {required: "아이디를 입력해주세요."})}
+                            type="text" id="Login-Email"
                             placeholder="아이디를 입력하세요."
                         />
                         <input
@@ -67,7 +84,9 @@ export default function ModalLogin({setModalType}:ModalLoginProps) {
                             id="Login-Password"
                             placeholder="비밀번호를 입력하세요."/>
                         <div className="check-form">
-                            <input type="checkbox" id="Login-Memory"/>
+                            <input
+                                {...register("memory")}
+                                type="checkbox" id="Login-Memory"/>
                             <label htmlFor="Login-Memory">로그인 유지 하기</label>
                         </div>
                         <div className="login-form-btns">
