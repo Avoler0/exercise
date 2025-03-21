@@ -1,4 +1,3 @@
-import jwt from "jsonwebtoken";
 import {NextResponse} from "next/server";
 import supabaseServer from "src/utils/supabase/supabase-server";
 

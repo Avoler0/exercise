@@ -6,6 +6,7 @@ import Toast from "src/utils/toast";
 import Modal from "src/utils/modal";
 import ModalLogin from "src/component/modal/Modal-Login.Cmp";
 import ModalSelectAccount from "src/component/modal/Modal-Select-Account.Cmp";
+import { UserRound } from 'lucide-react';
 
 export default function Header() {
     const refNavSub = React.useRef(null);
@@ -112,13 +113,15 @@ export default function Header() {
                         </ul>
                     </nav>
                     <div className="header-utils">
-                        <button className="account" type="button" onClick={evtOpenLogin}></button>
+                        <button className="account" type="button" onClick={evtOpenLogin}>
+                            <UserRound />
+                        </button>
                         <button className="mode" type="button" onClick={darkMode}></button>
                     </div>
                 </div>
             </header>
             <div ref={refNavSub} className={`nav-sub ${navSubState ? "drop" : ""}`} onMouseLeave={leaveSubNav}>
-                {navMenu.map((menu) =>
+            {navMenu.map((menu) =>
                     menu.sub ? (
                         <ul key={menu.name} data-menu-name={menu.name}>
                             {menu.sub.map((sub,index) => (

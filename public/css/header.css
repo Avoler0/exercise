@@ -13,10 +13,11 @@ header#header nav > ul > li > a { align-items: center; display: flex; font-weigh
 header#header nav > ul > li > a::after { background-color: var(--default-fs-color); bottom:0; content: ""; height: 2px; left: 50%; position: absolute; transform: translateX(-50%); transition: var(--header-transition); width: 0; }
 header#header nav > ul > li > a:hover::after { width: 100%; }
 
-.header-utils button { height: 40px; position: relative; width: 40px; }
+.header-utils button { height: 40px; position: relative; vertical-align: top; width: 40px; }
 .header-utils button::after { content:""; height: 24px; left: 50%; position: absolute; top: 50%; transform: translate(-50%,-50%); width: 24px; }
 .header-utils .mode::after { background: url("/images/common/light_mode.svg") center no-repeat; }
-.header-utils .account::after { background: url("/images/common/people.svg") center no-repeat; }
+.header-utils .account svg { height: 24px; margin-top: 3px; width: 24px; }
+.header-utils .account::after { content: none; }
 
 .nav-sub { background-color: var(--background); box-shadow: 0 0 3px rgba(0,0,0,0.3); left: 0; position: fixed; padding-top: var(--header-height); top: -100%; transition: 0.3s; text-align: center; width: 100%; z-index: 99; }
 .nav-sub.drop { top: 0; }
@@ -25,7 +26,3 @@ header#header nav > ul > li > a:hover::after { width: 100%; }
 .nav-sub ul li { display: inline-block; padding: 0 10px}
 .nav-sub ul li a:hover { opacity: 0.5; }
 
-.dark header#header { border-bottom: 1px solid #E9E9E9; box-shadow: none; }
-.dark header#header.open-menu { border-bottom: none; }
-.dark .nav-sub { border-bottom: 1px solid #E9E9E9; box-shadow: none; }
-.dark .header-utils .mode::after { background: url("/images/common/dark_mode.svg") center no-repeat; }

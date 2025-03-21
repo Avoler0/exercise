@@ -2,7 +2,7 @@ import React from "react";
 import Toast from "src/utils/toast";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
-import {getAccountByLogin} from "src/query/accout";
+import {loginById} from "src/query/accout";
 import {supabaseClient} from "src/utils/supabase/supabase-client";
 
 type ModalLoginProps = {
@@ -40,7 +40,7 @@ export default function ModalLogin({setModalType}:ModalLoginProps) {
         const password = input.password;
         const memory = input.memory;
 
-        const login = await getAccountByLogin(email,password,memory);
+        const login = await loginById(email,password,memory);
         console.log('데이터?',login);
 
         if(login){

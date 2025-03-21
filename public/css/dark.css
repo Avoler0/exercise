@@ -1,0 +1,10 @@
+
+
+.dark input[type="text"] { background-color: #3a3636; color: var(--color-white); }
+
+
+.dark header#header { border-bottom: 1px solid #E9E9E9; box-shadow: none; }
+.dark header#header.open-menu { border-bottom: none; }
+.dark .nav-sub { border-bottom: 1px solid #E9E9E9; box-shadow: none; }
+.dark .header-utils .mode::after { background: url("/images/common/dark_mode.svg") center no-repeat; }
+.dark .header-utils .account svg { stroke: var(--color-white); }
