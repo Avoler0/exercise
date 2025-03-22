@@ -6,10 +6,16 @@ import ModalLogin from "src/component/modal/Modal-Login.Cmp";
 import {getAccountsAll} from "src/app/api/account";
 import {supabaseServer} from "src/utils/supabase/supabase-server";
 import {getAccounts} from "src/query/accout";
+import {FullPageWrap, FullPage} from "src/component/FullPage.Cmp";
 
 export default async function Home(props) {
     return (
         <div>
+            <FullPageWrap>
+                <FullPage />
+                <FullPage />
+                <FullPage />
+            </FullPageWrap>
         </div>
     );
 }

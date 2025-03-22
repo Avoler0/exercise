@@ -3,8 +3,6 @@
 .inner { height: 100%; margin: 0 auto; max-width: 1440px; position: relative; width: 100%; }
 svg { height: 100%; width: 100%; }
 
-
-
 .list { display: flex; gap: 20px; padding: 50px; }
 .list .column { border: 1px solid #171717; padding: 15px; width: fit-content }
 .list .column ol { display: flex; flex-direction: column; gap: 10px; }
