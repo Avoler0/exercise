@@ -1,21 +1,29 @@
 
 import React from "react";
-import Toast from "src/utils/toast";
-import Modal from "src/utils/modal";
-import ModalLogin from "src/component/modal/Modal-Login.Cmp";
-import {getAccountsAll} from "src/app/api/account";
-import {supabaseServer} from "src/utils/supabase/supabase-server";
-import {getAccounts} from "src/query/accout";
-import {FullPageWrap, FullPage} from "src/component/FullPage.Cmp";
+import {FullPageWrap, FullPage, FullPageNav} from "src/component/FullPage.Cmp";
 
 export default async function Home(props) {
     return (
-        <div>
+        <>
             <FullPageWrap>
-                <FullPage />
-                <FullPage />
-                <FullPage />
+                <FullPage >
+                    <div className="h-screen flex items-center justify-center">
+                        <p className="text-3xl">테스트 풀 페이지 1</p>
+                    </div>
+                </FullPage>
+                <FullPage >
+                    <div className="h-screen flex items-center justify-center">
+                        <p className="text-3xl">테스트 풀 페이지 2</p>
+                    </div>
+                </FullPage>
+                <FullPage >
+                    <div className="h-screen flex items-center justify-center">
+                        <p className="text-3xl">테스트 풀 페이지 3</p>
+                    </div>
+                </FullPage>
             </FullPageWrap>
-        </div>
+
+            <FullPageNav />
+        </>
     );
 }

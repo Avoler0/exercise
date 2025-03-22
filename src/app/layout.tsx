@@ -1,7 +1,7 @@
+import "src/styles/common.css";
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "@/css/common.css";
-import "./globals.css";
 import Header from "src/app/header";
 import ToastCmp from "src/component/Toast.Cmp";
 import ModalCmp from "src/component/modal/Modal.Cmp";
@@ -28,12 +28,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-black">
+      <body className="h-full">
         <Header/>
-        <main id="container">
-          <div className="inner">
+        <main id="container h-full">
             {children}
-          </div>
         </main>
         <ToastCmp />
         <ModalCmp />

@@ -1,5 +1,5 @@
 
-header#header { background-color: var(--background); box-shadow: 0 0 3px rgba(0,0,0,0.3); height: var(--header-height); position: sticky; top: 0; width: 100%; z-index: 100; }
+header#header { background-color: var(--background); box-shadow: 0 0 3px rgba(0,0,0,0.3); height: var(--header-height); position: fixed; top: 0; width: 100%; z-index: 100; }
 header#header.open-menu { box-shadow: none; transition-delay: 0.1s; }
 
 header#header .inner { align-items: center; display: flex; justify-content: space-between }

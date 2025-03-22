@@ -1,0 +1,26 @@
+@import "globals.css";
+@import "header.css";
+@import "style.css";
+@import "dark.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+header#header {
+    @apply transition-transform duration-500
+}
+
+header#header.hide {
+    @apply -translate-y-full
+}
+
+.fullpage-nav span {
+    @apply block h-7 mb-1 w-1
+}
+
+.fullpage-nav span.active {
+    @apply bg-gray-950
+}
+
+
