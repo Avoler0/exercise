@@ -1,0 +1,75 @@
+import { create } from "zustand";
+import React from "react";
+
+type Table = {
+    id: string,
+    title: string, // 테이블 이름
+}
+
+type Item = {
+    id: string,
+    tableId: string,
+    title: string,
+    description?: string,
+    thumbnail?: string,
+}
+
+type DropStore = {
+    tables: Table[];
+    items: Item[];
+    groupRef: HTMLDivElement | null;
+    dragItem: HTMLElement | null;
+    dragItemId: string | null;
+
+    fromTableId: string | null;
+    toTableId: string | null;
+    insertIndex: number | null;
+
+    mouseX: number;
+    mouseY: number;
+
+    setGroupRef: (el: HTMLDivElement | null) => void;
+    setDragItem: (el: HTMLElement | null, id: string | null) => void;
+    setDropTarget: (tableId: string, index: number) => void;
+    setMousePosition: (x: number, y: number) => void;
+    reset: () => void;
+}
+
+export const useDropStore = create<DropStore>((set) => ({
+    tables:[],
+    items:[],
+    groupRef: null,
+    dragItem: null,
+    dragItemId: null,
+
+    fromTableId: null,
+    toTableId: null,
+    insertIndex: null,
+    insertIndexRef: { current: null },
+
+    mouseX: 0,
+    mouseY: 0,
+
+    setTables: (data:Item[]) => set({ tables:data }),
+    setItems: (data:Item[]) => set({ items:data }),
+    setGroupRef: (el) => set({ groupRef: el }),
+    setFromTableId: (id) => set({ fromTableId: id }),
+    setToTableId: (id) => set({ toTableId: id }),
+    setInsertIndex: (index) => set({ insertIndex: index }),
+    setInsertIndexRef: (index) => set((state) => {
+        state.insertIndexRef.current = index;
+        return {};
+    }),
+    setDragItem: (el, id) => set({ dragItem: el, dragItemId: id }),
+    setDropTarget: (tableId, index) =>
+        set({ toTableId: tableId, insertIndex: index }),
+    setMousePosition: (x, y) => set({ mouseX: x, mouseY: y }),
+    reset: () =>
+        set({
+            dragItem: null,
+            dragItemId: null,
+            fromTableId: null,
+            toTableId: null,
+            insertIndex: null,
+        }),
+}));

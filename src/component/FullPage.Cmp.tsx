@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext } from "react";
 import {useFullPageStore} from "src/stores/useFullPageStore";
+import clsx from "clsx";
 
 export function FullPageWrap({children}: any) {
     const { setLength } = useFullPageStore();
@@ -106,15 +107,16 @@ export function FullPageNav() {
     if(childrenLength == 0) return;
 
     return (
-        <div className="fullpage-nav fixed top-1/2 -translate-x-1/2 right-5 flex flex-col gap-2">
-            {...Array(childrenLength).map((_, i) => (
-                <span
-                    key={i}
-                    className={`w-2 h-2 rounded-full bg-gray-400 transition-all ${
-                        anchor === i + 1 ? "bg-white scale-125" : ""
-                    }`}
-                />
-            ))}
+        <div className="fixed top-1/2 -translate-x-1/2 right-5 flex flex-col gap-2">
+            {
+                childrenLength > 0 &&
+                Array.from({length: childrenLength}, (_, i) => (
+                    <span
+                        key={i}
+                        className={clsx("block h-6 bg-gray-300 mb-1 overflow-hidden rounded-3xl relative w-2 before:content-[''] before:block before:duration-500 before:absolute before:top-0 before:w-full", anchor == i + 1 && "before:bg-gray-500 before:h-full")}
+                    ></span>
+                ))
+            }
         </div>
     );
 }

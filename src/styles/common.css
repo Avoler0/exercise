@@ -15,12 +15,23 @@ header#header.hide {
     @apply -translate-y-full
 }
 
-.fullpage-nav span {
-    @apply block h-7 mb-1 w-1
+.drop-item.draggable {
+    @apply relative;
+
+    @apply after:block after:content-['']
+        after:w-[var(--drop-item-width)]
+        after:h-[var(--drop-item-height)]
+        after:invisible;
 }
 
-.fullpage-nav span.active {
-    @apply bg-gray-950
+.drop-item .in-item {
+    @apply pointer-events-none;
 }
 
+.drop-item.draggable .in-item {
+    background-color: inherit;
+    border: inherit;
+    border-radius: inherit;
+    @apply fixed
+}
 

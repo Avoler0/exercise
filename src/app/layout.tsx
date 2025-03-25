@@ -30,7 +30,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="h-full">
         <Header/>
-        <main id="container h-full">
+        <main id="container" className="min-h-screen">
             {children}
         </main>
         <ToastCmp />
