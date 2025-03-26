@@ -19,7 +19,7 @@ export default function DragClient({ tables: initialTables, items: initialItems 
         <DropTablesGroup >
               {tables.map(table => (
                   <DropTable table={table} key={table.id}>
-                      {items && items.filter(item => item.tableId === table.id).map(item => (
+                      {items && items.filter(item => item.table_id === table.id).map(item => (
                           <DropTableItem key={item.id} item={item} />
                       ))}
                   </DropTable>

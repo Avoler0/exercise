@@ -1,7 +1,7 @@
 "use client";
 
 import {useDropStore} from "src/stores/useDropStore";
-import React, {useCallback, useId} from "react";
+import React, {MouseEventHandler, useCallback, useId} from "react";
 import clsx from "clsx";
 import { throttle } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
@@ -24,10 +24,7 @@ export function DropTablesGroup({children}:any){
     const groupTableRef = React.useRef<HTMLDivElement>(null);
     const items = useDropStore((state)=>state.items);
     const dragItem = useDropStore((state) => state.dragItem);
-    const dragItemId = useDropStore((state) => state.dragItemId);
-    const fromTableId = useDropStore((state) => state.fromTableId);
     const dragItemRef = React.useRef<HTMLElement | null>(null);
-    const {setDragItem} = useDropStore();
 
     React.useEffect(()=>{
         dragItemRef.current = dragItem;
@@ -37,14 +34,23 @@ export function DropTablesGroup({children}:any){
             const mouseUpHandler = (evt) => {
                 if(dragItem){
                     const toTableId = (evt.target as HTMLElement).closest('.drop-table')?.getAttribute('data-table-id');
+                    const fromTableId = useDropStore.getState().fromTableId;
                     const insertIndex = useDropStore.getState().insertIndex;
+                    const dragItemId = dragItem.getAttribute('data-item-id');
+                    const dragItemMeta = useDropStore.getState().dragItemMeta;
                     if(toTableId){
-                        console.log('인설트',insertIndex)
-                        console.log('투 테이블 있음',toTableId,fromTableId)
+                        const newItems = [...items];
+                        const dragItemIndex = items.findIndex(item=>item.id === dragItemId);
+                        const draggedItem = newItems.splice(dragItemIndex,1)[0];
+                        draggedItem.table_id = toTableId;
+                        newItems.splice(insertIndex,0,draggedItem);
+
+                        console.log(newItems)
+                        useDropStore.setState({items:newItems})
                     }
 
                     dragItem?.classList.remove("draggable");
-                    setDragItem(null,null);
+                    useDropStore.setState({dragItem:null,dragItemMeta:null,fromTableId:null,toTableId:null});
                 }
             }
             const mouseMoveHandler = (evt:MouseEvent) => {  dragItemPosition(evt,dragItemContent); }
@@ -71,11 +77,10 @@ export function DropTablesGroup({children}:any){
         </ul>
     )
 }
-
+// 플레이스 홀더, insertTableId 지정
 export function DropTable({key,table,children}:any){
     const enterRef = React.useRef(false);
     const insertIndex = useDropStore.getState().insertIndex;
-    const formTableId = useDropStore((state)=>state.fromTableId);
     const toTableId = useDropStore((state)=>state.toTableId);
     const dragItem = useDropStore((state)=>state.dragItem);
     const { setToTableId } = useDropStore();
@@ -96,48 +101,42 @@ export function DropTable({key,table,children}:any){
             const target = evt.currentTarget as HTMLElement;
             if (!target) return;
             const rect = target.getBoundingClientRect();
-            const toTableId = target.dataset.tableId;
             const mouseY = evt.clientY - rect.top;
-            const childrens = target.querySelectorAll('li.drop-item');
-            if (enterRef.current) {
+            const childrens:NodeListOf<Element> | undefined = target.querySelectorAll('li.drop-item');
+            if (enterRef.current && childrens.length >= 0) {
                 let closestIndex = 0;
                 let closestOffset = Infinity;
+                let isBelow = false;
 
                childrens.forEach((child, index) => {
                    const childRect = child.getBoundingClientRect();
                    const middleY = childRect.top - rect.top + childRect.height / 2;
                    const offset = Math.abs(mouseY - middleY);
 
+
                    if(offset < closestOffset){
                        closestOffset = offset;
                        closestIndex = index;
+                       isBelow = mouseY > middleY;
                    }
 
                })
 
-                const targetRect = childrens[closestIndex].getBoundingClientRect();
-                const insertIndex = mouseY > targetRect.top + targetRect.height / 2
-                    ? closestIndex + 1
-                    : closestIndex;
-
-
-                console.log('마지막으러 넣는 인썰ㅇ트',insertIndex)
-                useDropStore.setState({ insertIndex: insertIndex })
-                // setInsertIndexRef(insertIndex);
+                useDropStore.setState({ insertIndex: isBelow ? closestIndex + 1 : closestIndex })
             }
         }, 16),
         []
     );
 
     return (
-        <li key={key} data-table-id={table.id} className="drop-table border p-3 h-full" onMouseEnter={enterHandler} onMouseLeave={leaveHandler}
+        <li key={key} data-table-id={table.id} className="drop-table border p-3 h-full w-52" onMouseEnter={enterHandler} onMouseLeave={leaveHandler}
              onMouseMove={moveHandler}>
-            <div>{table.title}</div>
+            <h3 className="text-gray-500 mb-4 text-xl font-semibold">{table.title}</h3>
             <ol className="flex flex-col h-full gap-4">
                 {React.Children.toArray(children).map((child, index) => (
                     <React.Fragment key={index}>
-                        {index === insertIndex && toTableId === table.id && formTableId !== table.id && dragItem && (
-                            <DropTableItem item={dragItem} />
+                        {index === insertIndex && toTableId === table.id && dragItem && (
+                            <DropTableItemPlaceholder item={dragItem} />
                         )}
                         {child}
                     </React.Fragment>
@@ -146,20 +145,16 @@ export function DropTable({key,table,children}:any){
                 {/* 👇 마지막 인덱스일 때 추가로 렌더링 (children.length === insertIndex인 경우) */}
                 {insertIndex === React.Children.count(children) &&
                     toTableId === table.id &&
-                    formTableId !== table.id &&
                     dragItem && (
-                        <DropTableItem item={dragItem} />
+                        <DropTableItemPlaceholder item={dragItem} />
                     )}
             </ol>
         </li>
     )
 }
 
-export function DropTableItem({item,children}:any){
-    const dragItem = useDropStore((state)=>state.dragItem);
-    const {setDragItem,setFromTableId} = useDropStore();
-
-    function evtItemMouseDown(evt){
+export function DropTableItem({item}:any){
+    function evtItemMouseDown(evt:React.MouseEvent<HTMLLIElement>){
         if(evt.button !== 0) return;
 
         const target = evt.currentTarget as HTMLElement;
@@ -173,18 +168,47 @@ export function DropTableItem({item,children}:any){
         target.style.setProperty("--drop-item-height",height + "px");
         target.classList.add("draggable");
 
-        dragItemPosition(evt,dragItemContent);
-        setFromTableId(fromTableId)
-        setDragItem(target,item.id);
+        const offsetX = evt.clientX;
+        const offsetY = evt.clientY;
+
+        if(dragItemContent instanceof HTMLElement){
+            dragItemContent.style.left = `${offsetX}px`;
+            dragItemContent.style.top = `${offsetY}px`;
+        }
+
+        useDropStore.setState({ dragItem: target, dragItemMeta:item, fromTableId:fromTableId })
     }
 
-
-
     return(
-        <li data-item-id={item.id} className="drop-item bg-white border-solid border border-gray-400 rounded-lg drag" onMouseDown={evtItemMouseDown}>
-            <div className="in-item min-h-16 py-2 px-3 min-w-32">
-                <strong>{item.title}</strong>
+        <>
+            {
+                (
+                    <li data-item-id={item.id} className="drop-item bg-white border-solid border border-gray-400 rounded-lg drag"
+                        onMouseDown={evtItemMouseDown}>
+                        <div className="in-item min-h-16 py-2 px-3">
+                            <strong>{item.title}</strong>
+                            <p>{item.content}</p>
+                        </div>
+                    </li>
+                )
+            }
+        </>
+)
+}
+
+export function DropTableItemPlaceholder({item}: any) {
+
+
+    return (
+        <>
+            <div className="drop-item-placholder bg-gray-200 rounded-lg"
+                 style={{
+                     width: item.offsetWidth + "px",
+                     height: item.offsetHeight + "px",
+                 }}
+            >
+
             </div>
-        </li>
+        </>
     )
 }

@@ -8,9 +8,9 @@ type Table = {
 
 type Item = {
     id: string,
-    tableId: string,
+    table_id: string,
     title: string,
-    description?: string,
+    content?: string,
     thumbnail?: string,
 }
 
@@ -19,7 +19,7 @@ type DropStore = {
     items: Item[];
     groupRef: HTMLDivElement | null;
     dragItem: HTMLElement | null;
-    dragItemId: string | null;
+    dragItemMeta: any;
 
     fromTableId: string | null;
     toTableId: string | null;
@@ -40,12 +40,14 @@ export const useDropStore = create<DropStore>((set) => ({
     items:[],
     groupRef: null,
     dragItem: null,
-    dragItemId: null,
+    dragItemMeta: null,
 
     fromTableId: null,
     toTableId: null,
     insertIndex: null,
     insertIndexRef: { current: null },
+
+    placeholderItem: null,
 
     mouseX: 0,
     mouseY: 0,
@@ -60,7 +62,7 @@ export const useDropStore = create<DropStore>((set) => ({
         state.insertIndexRef.current = index;
         return {};
     }),
-    setDragItem: (el, id) => set({ dragItem: el, dragItemId: id }),
+    setDragItem: (el) => set({ dragItem: el }),
     setDropTarget: (tableId, index) =>
         set({ toTableId: tableId, insertIndex: index }),
     setMousePosition: (x, y) => set({ mouseX: x, mouseY: y }),
